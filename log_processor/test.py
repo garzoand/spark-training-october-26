@@ -27,19 +27,28 @@ def test_stat_df(pipeline, log_df):
     stat_df = pipeline.build_stat_df(log_df)
     stat_df.show()
 
+def test_alarm_df(pipeline, log_df, evil_ip_rdd):
+    alarm_df = pipeline.build_alarm_df(log_df, evil_ip_rdd)
+    alarm_df.show()
 
 if __name__ == '__main__':
     (sc, spark) = utils.create_spark_env('LogProcessor', local=True)
     pipeline = pipeline.LogProcessorPipeline(sc, spark)
 
     ## Run Unit Test #1
-    test_input_rdd = sc.textFile('sample_data/unit-test.log')
-    test_access_log_df(pipeline, test_input_rdd)
+    #test_input_rdd = sc.textFile('sample_data/unit-test.log')
+    #test_access_log_df(pipeline, test_input_rdd)
 
     ## Run Unit Test #2
-    test_input_rdd = sc.textFile('sample_data/unit-test.log')
+    #test_input_rdd = sc.textFile('sample_data/unit-test2.log')
+    #log_df = pipeline.build_log_df(test_input_rdd)
+    #test_stat_df(pipeline, log_df)
+
+    ## Run Unit Test #3
+    test_input_rdd = sc.textFile('sample_data/unit-test2.log')
+    evil_ip_rdd = sc.textFile('sample_data/ip-list.txt')
     log_df = pipeline.build_log_df(test_input_rdd)
-    test_stat_df(pipeline, log_df)
+    test_alarm_df(pipeline, log_df, evil_ip_rdd)
 
     # Clean up
     sc.stop()

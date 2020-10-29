@@ -1,6 +1,7 @@
 import time
 import datetime
 from pyspark.sql.types import *
+from pyspark.sql.functions import *
 
 ## Helper Functions for Data Processing ##
 ##########################################
@@ -49,6 +50,9 @@ def process_access_log_line(log_line):
         pass
     return (get_ip(log_line), ts_str, date_str, hour, header[0], header[1], header[2], get_error_code(log_line))
 
+def process_ip_line(line):
+    s = line.split(':')[1].replace(' ', '')
+    return (s,)
 
 
 class LogProcessorPipeline:
@@ -85,8 +89,20 @@ class LogProcessorPipeline:
         return df
         
     def build_stat_df(self, log_df):
-        return None
+        log_df.createOrReplaceTempView('access_log')
+        stat_df = self.spark.sql("""
+        SELECT date, hour, resource, count(1) as cnt
+        FROM access_log
+        WHERE response != 200
+        GROUP BY date, hour, resource
+        ORDER BY cnt DESC
+        LIMIT 10;
+        """)
+        return stat_df        
     
     def build_alarm_df(self, log_df, evil_ip_rdd):
-        return None
-    
+        rdd = evil_ip_rdd.map(process_ip_line)
+        df_ip = rdd.toDF(['malicious_ip'])
+        df_joined = log_df.join(df_ip.hint('broadcast'), log_df.ip == df_ip.malicious_ip, 'inner')
+        df_res = df_joined.groupBy('ip').agg(count('resource'))
+        return df_res
