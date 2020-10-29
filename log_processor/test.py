@@ -21,7 +21,11 @@ def test_access_log_df(pipeline, test_input_rdd):
     actual = get_sorted_data_frame(df_actual.toPandas(), ['ip', 'ts', 'method', 'resource', 'protocol', 'response'])
     expected = get_sorted_data_frame(df_expected.toPandas(), ['ip', 'ts', 'method', 'resource', 'protocol', 'response'])
     pd.testing.assert_frame_equal(expected, actual, check_like=True)
-    print('#### Unit Test #1 passed ####')
+    print('#### Unit Test #1 passed ####')    
+
+def test_stat_df(pipeline, log_df):
+    stat_df = pipeline.build_stat_df(log_df)
+    stat_df.show()
 
 
 if __name__ == '__main__':
@@ -33,6 +37,9 @@ if __name__ == '__main__':
     test_access_log_df(pipeline, test_input_rdd)
 
     ## Run Unit Test #2
+    test_input_rdd = sc.textFile('sample_data/unit-test.log')
+    log_df = pipeline.build_log_df(test_input_rdd)
+    test_stat_df(pipeline, log_df)
 
     # Clean up
     sc.stop()
