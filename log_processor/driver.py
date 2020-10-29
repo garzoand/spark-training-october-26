@@ -40,7 +40,7 @@ log_df.write \
     .save(LOG_DF_OUTPUT)
 
 stat_df.write \
-    .format('jdbc')
+    .format('jdbc') \
     .option('url', 'jdbc:mysql://localhost/spark_test') \
     .option('dbtable', 'log_report') \
     .option('user', 'spark') \
