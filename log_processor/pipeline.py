@@ -81,7 +81,7 @@ class LogProcessorPipeline:
         rdd = access_log_rdd \
             .filter(lambda line: len(line) > 0) \
             .map(process_access_log_line)
-        df = spark.createDataFrame(rdd, self.access_log_schema)
+        df = self.spark.createDataFrame(rdd, self.access_log_schema)
         return df
         
     def build_stat_df(self, log_df):
