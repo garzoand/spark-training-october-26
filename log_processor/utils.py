@@ -11,3 +11,8 @@ def create_spark_env(appName, local=False):
     sc = pyspark.SparkContext(conf=conf)
     spark = SparkSession(sc)
     return (sc, spark)
+
+
+# 1. Yarn (what we'll do)
+# 2. Kubernetes (beta)
+# 3. Standalone (Mesos)
