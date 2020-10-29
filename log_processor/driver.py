@@ -5,15 +5,15 @@ import utils
 
 ## Constants ##
 ###############
-ACCESS_LOG_INPUT = ''
-EVIL_IP_INPUT = ''
-LOG_DF_OUTPUT = 's3://'
-ALARM_DF_OUTPUT = ''
+ACCESS_LOG_INPUT = 'sample_data/unit-test2.log'
+EVIL_IP_INPUT = 'sample_data/ip-list.txt'
+LOG_DF_OUTPUT = 'output/access_logs'
+ALARM_DF_OUTPUT = 'output/alarms'
 
 
 ## Spark Env. Creation ##
 #########################
-(sc, spark) = utils.create_spark_env('LogProcessor', local=False)
+(sc, spark) = utils.create_spark_env('LogProcessor', local=True)
 
 ## Processing happens ###
 ########################

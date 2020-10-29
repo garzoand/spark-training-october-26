@@ -3,5 +3,6 @@ lib
 include
 share
 __pycache__
+output
 
 
