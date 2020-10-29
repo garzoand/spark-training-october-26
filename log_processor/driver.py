@@ -49,7 +49,7 @@ stat_df.write \
     .option('numPartition', '1') \
     .save()
 
-alarm_df.write \
+alarm_df.coalece(1).write \
     .format('json') \
     .mode('overwrite') \
     .save(ALARM_DF_OUTPUT)
