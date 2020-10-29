@@ -1,6 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
 import pipeline
+import utils
 
 ## Constants ##
 ###############
@@ -12,8 +13,7 @@ ALARM_DF_OUTPUT = ''
 
 ## Spark Env. Creation ##
 #########################
-sc = pyspark.SparkContext(appName='AccessLogProcessor')
-spark = SparkSession(sc)
+(sc, spark) = utils.create_spark_env('LogProcessor', local=False)
 
 ## Processing happens ###
 ########################
